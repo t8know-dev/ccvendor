@@ -1,7 +1,8 @@
 -- modules/peripherals.lua — Peripheral wrappers for ccvendor
 -- Exports: init(), waitForPeripheral(), getStockQuantity(), findItemSlots(),
 --          checkStock(), dispenseItem(), lockDepositor(), unlockDepositor(),
---          setTotalPrice(), getAllRelayInputs(), heartbeatLoop()
+--          setTotalPrice(), getAllRelayInputs(), heartbeatLoop(),
+--          verifyLock()
 --
 -- Peripheral.call yields the current coroutine waiting for a
 -- peripheral_response event. All peripheral operations must run in a
@@ -152,6 +153,8 @@ function M.init()
             dlog("init: relay setOutput FAILED on " .. tostring(RELAY_LOCK_SIDE) .. ": " .. tostring(err))
         end
     end
+    M.verifyLock(true)
+    dlog("init: relay.getOutput(" .. tostring(RELAY_LOCK_SIDE) .. ")=" .. tostring(relay.getOutput(RELAY_LOCK_SIDE)))
     dlog("init: relay.getInput(" .. tostring(RELAY_LOCK_SIDE) .. ")=" .. tostring(relay.getInput(RELAY_LOCK_SIDE)))
 
     -- Probe relay + depositor methods to verify API
@@ -314,6 +317,34 @@ function M.dispenseItem(itemName, targetQty, progressCallback)
 end
 
 -- ============================================================================
+-- Relay output verification
+-- ============================================================================
+
+-- Verify relay output state using getOutput().
+-- Retries once if mismatch. Returns true if output matches expected.
+function M.verifyLock(expected)
+    local rl = getRelay()
+    if not rl then return false end
+    os.sleep(0.05)
+    local current = rl.getOutput(RELAY_LOCK_SIDE)
+    if current == expected then
+        dlog("verifyLock: OK, output=" .. tostring(expected) .. " on " .. tostring(RELAY_LOCK_SIDE))
+        return true
+    end
+    dlog("verifyLock: MISMATCH — expected=" .. tostring(expected) .. ", got=" .. tostring(current) .. " on " .. tostring(RELAY_LOCK_SIDE))
+    -- Retry once
+    pcall(function() rl.setOutput(RELAY_LOCK_SIDE, expected) end)
+    os.sleep(0.1)
+    current = rl.getOutput(RELAY_LOCK_SIDE)
+    if current == expected then
+        dlog("verifyLock: retry OK")
+        return true
+    end
+    dlog("verifyLock: retry FAILED — still " .. tostring(current))
+    return false
+end
+
+-- ============================================================================
 -- Depositor / relay helpers
 -- ============================================================================
 
@@ -344,6 +375,7 @@ function M.lockDepositor()
         else
             dlog("lockDepositor: relay setOutput FAILED on " .. tostring(RELAY_LOCK_SIDE) .. ": " .. tostring(err))
         end
+        M.verifyLock(true)
     else
         dlog("lockDepositor: relay nil")
     end
@@ -359,6 +391,7 @@ function M.unlockDepositor()
         else
             dlog("unlockDepositor: relay setOutput FAILED on " .. tostring(RELAY_LOCK_SIDE) .. ": " .. tostring(err))
         end
+        M.verifyLock(false)
     else
         dlog("unlockDepositor: relay nil")
     end

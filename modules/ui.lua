@@ -292,7 +292,7 @@ function M.createUI(monitor, callbacks)
     -- CANCEL button (3 lines high), row 9
     local cancelRow = 9
     if h >= cancelRow then
-        local btnWidth = 13
+        local btnWidth = 12
         local btnX = math.floor((w - btnWidth) / 2)
         cancelButton = app:createButton({
             x = btnX + 1, y = cancelRow,

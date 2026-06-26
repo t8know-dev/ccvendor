@@ -48,6 +48,7 @@ function M.vendorLoop()
             elseif screen == "thankyou" then
                 dlog("vendorLoop: thankyou screen, waiting " .. tostring(THANKYOU_DELAY) .. "s")
                 os.sleep(THANKYOU_DELAY)
+                periphs.lockDepositor()  -- lock before returning to main
                 st.resetTransaction()
                 st.updateState({ screen = "main" })
 
