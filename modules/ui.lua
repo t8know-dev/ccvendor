@@ -7,8 +7,9 @@
 -- Widget layout (main screen, scale 0.5):
 --   Row 1-2: header (red bg)
 --   Row 3:   item name or "Out of stock"
---   Row 5:   [<] qty label [>]  (arrows 5x3 each)
---   Row 8:   [BUY] button (hidden when out of stock)
+--   Row 5:   [<] qty [>]  (arrows 5x1 each)
+--   Row 8:   price label
+--   Row 9:   [BUY] button (hidden when out of stock)
 
 local M = {}
 local pixelui
@@ -115,7 +116,7 @@ function M.createUI(monitor, callbacks)
         })
         root:addChild(itemNameLabel)
 
-        -- Row 8: price label (above BUY button)
+        -- Row 8: price label (between quantity selector and BUY button)
         if h >= 8 then
             priceLabel = app:createLabel({
                 x = 1, y = 8,
@@ -313,12 +314,12 @@ function M.createUI(monitor, callbacks)
         root:addChild(splashLabel3)
     end
 
-    -- Arrow buttons: 5x3 each, row 5-7
+    -- Arrow buttons: 5x1 each, row 5
     local arrowRow = 5
-    if h >= arrowRow + 2 then
+    if h >= arrowRow then
         leftArrow = app:createButton({
             x = 1, y = arrowRow,
-            width = 5, height = 3,
+            width = 5, height = 1,
             label = "\17",  -- left arrow character
             bg = colors.gray,
             fg = colors.white,
@@ -329,7 +330,7 @@ function M.createUI(monitor, callbacks)
 
         rightArrow = app:createButton({
             x = w - 4, y = arrowRow,
-            width = 5, height = 3,
+            width = 5, height = 1,
             label = "\16",  -- right arrow character
             bg = colors.gray,
             fg = colors.white,
@@ -339,7 +340,7 @@ function M.createUI(monitor, callbacks)
         root:addChild(rightArrow)
 
         qtyLabel = app:createLabel({
-            x = 6, y = arrowRow + 1,
+            x = 6, y = arrowRow,
             width = math.max(1, w - 10), height = 1,
             text = tostring(DEFAULT_QUANTITY),
             align = "center",
@@ -350,8 +351,8 @@ function M.createUI(monitor, callbacks)
         root:addChild(qtyLabel)
     end
 
-    -- BUY button (3 lines high), row 8
-    local buyRow = 8
+    -- BUY button (3 lines high), row 9
+    local buyRow = 9
     if h >= buyRow then
         local btnWidth = 13
         local btnX = math.floor((w - btnWidth) / 2)
