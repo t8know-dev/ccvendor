@@ -27,7 +27,7 @@ local rightArrow
 local buyButton
 local progressBar
 local progressTextLabel
-local msgLine1, msgLine2, msgLine3
+local msgLine1, msgLine2, msgLine3, msgLine4
 
 local w, h
 
@@ -54,6 +54,7 @@ local function hideAllDynamic()
     if msgLine1 then msgLine1.visible = false end
     if msgLine2 then msgLine2.visible = false end
     if msgLine3 then msgLine3.visible = false end
+    if msgLine4 then msgLine4.visible = false end
 end
 
 -- Initialisation
@@ -137,6 +138,17 @@ function M.createUI(monitor, callbacks)
             visible = false,
         })
         root:addChild(msgLine3)
+
+        msgLine4 = app:createLabel({
+            x = 1, y = 6,
+            width = w, height = 1,
+            text = "",
+            align = "center",
+            bg = colors.black,
+            fg = colors.green,
+            visible = false,
+        })
+        root:addChild(msgLine4)
 
         outOfStockLabel = app:createLabel({
             x = 1, y = 3,
@@ -314,18 +326,24 @@ function M.updateScreen(st)
     elseif st.screen == "payment" then
         if headerLabel then headerLabel.visible = true end
         if msgLine1 then
-            msgLine1:setText(string.format(MSG.payment_hint or "Please insert %d spur(s)", st.totalPrice))
+            msgLine1:setText(MSG.payment_line1 or "Please insert")
             msgLine1.fg = colors.yellow
             msgLine1.visible = true
         end
         if msgLine2 then
-            msgLine2:setText(MSG.payment_line2 or "into the depositor")
+            msgLine2:setText(string.format(MSG.payment_line2 or "%d spur(s)", st.totalPrice))
             msgLine2.fg = colors.yellow
             msgLine2.visible = true
         end
         if msgLine3 then
-            msgLine3:setText("")
-            msgLine3.visible = false
+            msgLine3:setText(MSG.payment_line3 or "into the")
+            msgLine3.fg = colors.yellow
+            msgLine3.visible = true
+        end
+        if msgLine4 then
+            msgLine4:setText(MSG.payment_line4 or "depositor")
+            msgLine4.fg = colors.yellow
+            msgLine4.visible = true
         end
 
     elseif st.screen == "dispensing" then

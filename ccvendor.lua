@@ -139,6 +139,7 @@ local startupOk, startupErr = pcall(function()
 
     -- Show splash screen
     st.updateState({ screen = "splash" })
+    ui.updateScreen(st.getState())
     dlog("splash: showing for " .. tostring(SPLASH_DELAY) .. "s")
     os.sleep(SPLASH_DELAY)
 

@@ -3,7 +3,7 @@
 
 -- Peripherals
 MONITOR          = "monitor_1093"       -- UI display monitor
-DEPOSITOR        = "numismatics:andesite_depositor_1" -- Coin depositor (payment)
+DEPOSITOR        = "Numismatics_Depositor_19" -- Coin depositor (payment)
 RELAY            = "redstone_relay_60"  -- Redstone relay for depositor lock/unlock
 SOURCE_BARREL    = "minecraft:barrel_64" -- Source barrel (stock for sale)
 DEST_BARREL      = "minecraft:barrel_63" -- Destination barrel (dispensed items)
@@ -12,13 +12,13 @@ DEST_BARREL      = "minecraft:barrel_63" -- Destination barrel (dispensed items)
 RELAY_LOCK_SIDE         = "top"   -- Relay output side that controls depositor lock
                                   -- HIGH = locked (blocking coin insertion)
                                   -- LOW  = unlocked (accepting coins)
-PAYMENT_DETECTION_SIDE  = "bottom" -- Relay input side where depositor emits payment signal
+PAYMENT_DETECTION_SIDE  = "top" -- Relay input side where depositor emits payment signal
 
 -- Item to sell
-ITEM        = "minecraft:diamond"  -- Item identifier (vanilla or modded)
-ITEM_LABEL  = "Diamond"            -- Display name on screen
-ITEM_PRICE  = 5                    -- Price per unit in spurs
-COIN_NAME   = "spur"              -- Coin name for depositor API
+ITEM        = "minecraft:red_wool"  -- Item identifier (vanilla or modded)
+ITEM_LABEL  = "Red wool"            -- Display name on screen
+ITEM_PRICE  = 1                     -- Price per unit in spurs
+COIN_NAME   = "spur"                -- Coin name for depositor API
 
 -- Quantity selection
 DEFAULT_QUANTITY = 1               -- Default selected quantity
@@ -47,8 +47,10 @@ MSG = {
     main_qty_label  = "%d",
     out_of_stock    = "Out of stock!",
     buy_btn         = "[ BUY ]",
-    payment_hint    = "Please insert %d spur(s)",
-    payment_line2   = "into the depositor",
+    payment_line1   = "Please insert",
+    payment_line2   = "%d spur(s)",
+    payment_line3   = "into the",
+    payment_line4   = "depositor",
     dispensing      = "Dispensing...",
     progress_text   = "%d/%d (%d%%)",
     thanks_line1    = "Thank you!",
