@@ -280,7 +280,7 @@ function M.createUI(monitor, callbacks)
         buyButton = app:createButton({
             x = btnX + 1, y = buyRow,
             width = btnWidth, height = 3,
-            label = MSG.buy_btn or "[ BUY ]",
+            label = " " .. (MSG.buy_btn or "[ BUY ]"),
             bg = colors.blue,
             fg = colors.white,
             onClick = function() pcall(callbacks.onBuyClick) end,

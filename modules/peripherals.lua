@@ -103,8 +103,8 @@ end
 -- ============================================================================
 
 local function probeMethods(name, label)
-    dlog("probeMethods(" .. label .. "): peripheral.call(" .. tostring(name) .. ", \"methods\")")
-    local ok, methods = pcall(function() return peripheral.call(name, "methods") end)
+    dlog("probeMethods(" .. label .. "): peripheral.call(" .. tostring(name) .. ", \"getMethods\")")
+    local ok, methods = pcall(function() return peripheral.call(name, "getMethods") end)
     if ok and type(methods) == "table" then
         local strs = {}
         for _, m in ipairs(methods) do strs[#strs + 1] = tostring(m) end
