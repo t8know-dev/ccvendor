@@ -29,6 +29,7 @@ local cancelButton
 local progressBar
 local progressTextLabel
 local msgLine1, msgLine2, msgLine3, msgLine4
+local thanksLine1, thanksLine2, thanksLine3, thanksLine4, thanksLine5
 
 local w, h
 
@@ -57,6 +58,11 @@ local function hideAllDynamic()
     if msgLine2 then msgLine2.visible = false end
     if msgLine3 then msgLine3.visible = false end
     if msgLine4 then msgLine4.visible = false end
+    if thanksLine1 then thanksLine1.visible = false end
+    if thanksLine2 then thanksLine2.visible = false end
+    if thanksLine3 then thanksLine3.visible = false end
+    if thanksLine4 then thanksLine4.visible = false end
+    if thanksLine5 then thanksLine5.visible = false end
 end
 
 -- Initialisation
@@ -151,6 +157,62 @@ function M.createUI(monitor, callbacks)
             visible = false,
         })
         root:addChild(msgLine4)
+
+        -- Thank you screen labels (rows 3, 5, 6, 8, 9)
+        thanksLine1 = app:createLabel({
+            x = 1, y = 3,
+            width = w, height = 1,
+            text = "",
+            align = "center",
+            bg = colors.black,
+            fg = colors.green,
+            visible = false,
+        })
+        root:addChild(thanksLine1)
+
+        thanksLine2 = app:createLabel({
+            x = 1, y = 5,
+            width = w, height = 1,
+            text = "",
+            align = "center",
+            bg = colors.black,
+            fg = colors.green,
+            visible = false,
+        })
+        root:addChild(thanksLine2)
+
+        thanksLine3 = app:createLabel({
+            x = 1, y = 6,
+            width = w, height = 1,
+            text = "",
+            align = "center",
+            bg = colors.black,
+            fg = colors.green,
+            visible = false,
+        })
+        root:addChild(thanksLine3)
+
+        thanksLine4 = app:createLabel({
+            x = 1, y = 8,
+            width = w, height = 1,
+            text = "",
+            align = "center",
+            bg = colors.black,
+            fg = colors.green,
+            visible = false,
+        })
+        root:addChild(thanksLine4)
+
+        thanksLine5 = app:createLabel({
+            x = 1, y = 9,
+            width = w, height = 1,
+            text = "",
+            align = "center",
+            bg = colors.black,
+            fg = colors.green,
+            visible = false,
+        })
+        root:addChild(thanksLine5)
 
         outOfStockLabel = app:createLabel({
             x = 1, y = 3,
@@ -292,12 +354,12 @@ function M.createUI(monitor, callbacks)
     -- CANCEL button (3 lines high), row 9
     local cancelRow = 9
     if h >= cancelRow then
-        local btnWidth = 12
+        local btnWidth = 13
         local btnX = math.floor((w - btnWidth) / 2)
         cancelButton = app:createButton({
             x = btnX + 1, y = cancelRow,
             width = btnWidth, height = 1,
-            label = MSG.cancel_btn or "CANCEL",
+            label = MSG.cancel_btn or "ABORT",
             bg = colors.orange,
             fg = colors.white,
             onClick = function() pcall(callbacks.onCancelClick) end,
@@ -389,20 +451,25 @@ function M.updateScreen(st)
 
     elseif st.screen == "thankyou" then
         if headerLabel then headerLabel.visible = true end
-        if msgLine1 then
-            msgLine1:setText(MSG.thanks_line1 or "Thank you!")
-            msgLine1.fg = colors.green
-            msgLine1.visible = true
+        if thanksLine1 then
+            thanksLine1:setText(MSG.thanks_line1 or "Thank you!")
+            thanksLine1.visible = true
         end
-        if msgLine2 then
-            msgLine2:setText(MSG.thanks_line2 or "Purchase complete.")
-            msgLine2.fg = colors.green
-            msgLine2.visible = true
+        if thanksLine2 then
+            thanksLine2:setText(MSG.thanks_line2 or "Purchase")
+            thanksLine2.visible = true
         end
-        if msgLine3 then
-            msgLine3:setText(MSG.thanks_line3 or "Collect your item(s).")
-            msgLine3.fg = colors.green
-            msgLine3.visible = true
+        if thanksLine3 then
+            thanksLine3:setText(MSG.thanks_line3 or "complete.")
+            thanksLine3.visible = true
+        end
+        if thanksLine4 then
+            thanksLine4:setText(MSG.thanks_line4 or "Collect your")
+            thanksLine4.visible = true
+        end
+        if thanksLine5 then
+            thanksLine5:setText(MSG.thanks_line5 or "item(s).")
+            thanksLine5.visible = true
         end
 
     elseif st.screen == "error" then

@@ -118,9 +118,9 @@ function M._handlePaymentState()
         end
 
         -- Configure depositor
-        local priceOk = periphs.setTotalPrice(price)
+        local priceOk = periphs.setCoinAmount(price)
         if not priceOk then
-            dlog("_handlePaymentState: setTotalPrice failed")
+            dlog("_handlePaymentState: setCoinAmount failed")
             periphs.lockDepositor()
             st.updateState({
                 screen = "error",
@@ -133,12 +133,12 @@ function M._handlePaymentState()
         st.updateState({ totalPrice = price })
 
         -- Guard: re-check screen before unlocking — cancelPayment() may have run
-        -- during the stock check or setTotalPrice above (both can yield).
+        -- during the stock check or setCoinAmount above (both can yield).
         if st.getState("screen") ~= "payment" then
             dlog("_handlePaymentState: payment cancelled after setup, skipping unlock")
             -- Depositor is configured but locked; screen is already "main".
             -- Clear price on depositor to avoid stale price data.
-            pcall(periphs.setTotalPrice, 0)
+            pcall(periphs.setCoinAmount, 0)
             return
         end
 
@@ -152,7 +152,7 @@ function M._handlePaymentState()
         if st.getState("screen") ~= "payment" then
             dlog("_handlePaymentState: payment cancelled during stabilisation, re-locking")
             periphs.lockDepositor()
-            pcall(periphs.setTotalPrice, 0)
+            pcall(periphs.setCoinAmount, 0)
             return
         end
 

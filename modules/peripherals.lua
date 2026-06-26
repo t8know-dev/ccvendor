@@ -1,8 +1,12 @@
 -- modules/peripherals.lua — Peripheral wrappers for ccvendor
 -- Exports: init(), waitForPeripheral(), getStockQuantity(), findItemSlots(),
 --          checkStock(), dispenseItem(), lockDepositor(), unlockDepositor(),
---          setTotalPrice(), getAllRelayInputs(), heartbeatLoop(),
+--          setCoinAmount(), getAllRelayInputs(), heartbeatLoop(),
 --          verifyLock()
+
+-- Note: Depositor pricing uses setCoinAmount("spur", amount) instead of
+-- setTotalPrice(amount), because Numismatics may not expose setTotalPrice
+-- as a peripheral method.
 --
 -- Peripheral.call yields the current coroutine waiting for a
 -- peripheral_response event. All peripheral operations must run in a
@@ -348,19 +352,19 @@ end
 -- Depositor / relay helpers
 -- ============================================================================
 
--- Set the total price on the depositor (in spurs).
-function M.setTotalPrice(amount)
+-- Set the total price on the depositor using setCoinAmount("spur", amount).
+function M.setCoinAmount(amount)
     local dep = getDepositor()
     if not dep then
-        dlog("setTotalPrice: depositor nil")
+        dlog("setCoinAmount: depositor nil")
         return false
     end
-    local ok, err = pcall(function() dep.setTotalPrice(amount) end)
+    local ok, err = pcall(function() dep.setCoinAmount("spur", amount) end)
     if ok then
-        dlog("setTotalPrice: set " .. tostring(amount) .. " spurs")
+        dlog("setCoinAmount: set spur " .. tostring(amount))
         return true
     else
-        dlog("setTotalPrice: failed: " .. tostring(err))
+        dlog("setCoinAmount: failed: " .. tostring(err))
         return false
     end
 end

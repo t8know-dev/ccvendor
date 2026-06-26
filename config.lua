@@ -35,7 +35,7 @@ TRANSFER_TICK_INTERVAL  = 0.1    -- Interval between transfer loop iterations
 SPLASH_DELAY            = 3       -- Seconds to show splash screen
 
 -- Version
-APP_VERSION = "v0.4"
+APP_VERSION = "v0.5"
 
 -- UI Messages — monitor scale 0.5. Keep lines SHORT.
 MSG = {
@@ -47,7 +47,7 @@ MSG = {
     main_qty_label  = "%d",
     out_of_stock    = "Out of stock!",
     buy_btn         = "[ BUY ]",
-    cancel_btn      = "CANCEL",
+    cancel_btn      = "ABORT",
     payment_line1   = "Please insert",
     payment_line2   = "%d spur(s)",
     payment_line3   = "into the",
@@ -55,8 +55,10 @@ MSG = {
     dispensing      = "Dispensing...",
     progress_text   = "%d/%d (%d%%)",
     thanks_line1    = "Thank you!",
-    thanks_line2    = "Purchase complete.",
-    thanks_line3    = "Collect your item(s).",
+    thanks_line2    = "Purchase",
+    thanks_line3    = "complete.",
+    thanks_line4    = "Collect your",
+    thanks_line5    = "item(s).",
     error_line1     = "Error!",
     error_timeout   = "Payment timeout!",
     error_stock     = "Insufficient stock!",
