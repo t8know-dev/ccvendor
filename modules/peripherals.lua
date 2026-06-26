@@ -144,7 +144,7 @@ function M.init()
     destBbl = M.waitForPeripheral(DEST_BARREL, "Dest: " .. DEST_BARREL)
 
     -- Set relay output HIGH on startup to lock the depositor
-    pcall(function() relay:setOutput(RELAY_LOCK_SIDE, true) end)
+    pcall(function() relay:setOutput(RELAY_LOCK_SIDE, 15) end)
     dlog("init: relay set to HIGH (locked) on side " .. tostring(RELAY_LOCK_SIDE))
 
     -- Probe depositor methods to verify API
@@ -330,7 +330,7 @@ end
 function M.lockDepositor()
     local rl = getRelay()
     if rl then
-        pcall(function() rl.setOutput(RELAY_LOCK_SIDE, true) end)
+        pcall(function() rl.setOutput(RELAY_LOCK_SIDE, 15) end)
         dlog("lockDepositor: relay set to HIGH on " .. tostring(RELAY_LOCK_SIDE))
     else
         dlog("lockDepositor: relay nil")
@@ -341,7 +341,7 @@ end
 function M.unlockDepositor()
     local rl = getRelay()
     if rl then
-        pcall(function() rl.setOutput(RELAY_LOCK_SIDE, false) end)
+        pcall(function() rl.setOutput(RELAY_LOCK_SIDE, 0) end)
         dlog("unlockDepositor: relay set to LOW on " .. tostring(RELAY_LOCK_SIDE))
     else
         dlog("unlockDepositor: relay nil")

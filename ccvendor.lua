@@ -119,6 +119,13 @@ local function onBuyClick()
     end
 end
 
+local function onCancelClick()
+    if st.getState("screen") == "payment" then
+        dlog("CANCEL clicked during payment")
+        vend.cancelPayment()
+    end
+end
+
 -- ---------------------------------------------------------------------------
 -- Main startup
 -- ---------------------------------------------------------------------------
@@ -132,9 +139,10 @@ local startupOk, startupErr = pcall(function()
 
     -- Create the PixelUI app with all widgets
     local app = ui.createUI(mon, {
-        onLeftClick  = onLeftClick,
-        onRightClick = onRightClick,
-        onBuyClick   = onBuyClick,
+        onLeftClick   = onLeftClick,
+        onRightClick  = onRightClick,
+        onBuyClick    = onBuyClick,
+        onCancelClick = onCancelClick,
     })
 
     -- Show splash screen

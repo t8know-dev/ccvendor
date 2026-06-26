@@ -25,6 +25,7 @@ local leftArrow
 local qtyLabel
 local rightArrow
 local buyButton
+local cancelButton
 local progressBar
 local progressTextLabel
 local msgLine1, msgLine2, msgLine3, msgLine4
@@ -49,6 +50,7 @@ local function hideAllDynamic()
     if qtyLabel then qtyLabel.visible = false end
     if rightArrow then rightArrow.visible = false end
     if buyButton then buyButton.visible = false end
+    if cancelButton then cancelButton.visible = false end
     if progressBar then progressBar.visible = false end
     if progressTextLabel then progressTextLabel.visible = false end
     if msgLine1 then msgLine1.visible = false end
@@ -287,6 +289,23 @@ function M.createUI(monitor, callbacks)
         root:addChild(buyButton)
     end
 
+    -- CANCEL button (3 lines high), row 9
+    local cancelRow = 9
+    if h >= cancelRow then
+        local btnWidth = 12
+        local btnX = math.floor((w - btnWidth) / 2)
+        cancelButton = app:createButton({
+            x = btnX + 1, y = cancelRow,
+            width = btnWidth, height = 3,
+            label = MSG.cancel_btn or "CANCEL",
+            bg = colors.orange,
+            fg = colors.white,
+            onClick = function() pcall(callbacks.onCancelClick) end,
+            visible = false,
+        })
+        root:addChild(cancelButton)
+    end
+
     return app
 end
 
@@ -345,6 +364,7 @@ function M.updateScreen(st)
             msgLine4.fg = colors.yellow
             msgLine4.visible = true
         end
+        if cancelButton then cancelButton.visible = true end
 
     elseif st.screen == "dispensing" then
         if headerLabel then headerLabel.visible = true end

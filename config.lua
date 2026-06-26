@@ -47,6 +47,7 @@ MSG = {
     main_qty_label  = "%d",
     out_of_stock    = "Out of stock!",
     buy_btn         = "[ BUY ]",
+    cancel_btn      = "CANCEL",
     payment_line1   = "Please insert",
     payment_line2   = "%d spur(s)",
     payment_line3   = "into the",

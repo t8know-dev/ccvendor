@@ -217,4 +217,14 @@ function M._handleDispenseState()
     end
 end
 
+-- Cancel an in-progress payment — lock depositor, reset state, return to main.
+function M.cancelPayment()
+    dlog("cancelPayment: cancelling current transaction")
+    pcall(periphs.lockDepositor)
+    paymentSetupDone = false
+    st.resetTransaction()
+    local hasStock = periphs.checkStock(ITEM, DEFAULT_QUANTITY)
+    st.updateState({ screen = "main", hasStock = hasStock })
+end
+
 return M
