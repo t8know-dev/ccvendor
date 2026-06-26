@@ -351,14 +351,14 @@ function M.createUI(monitor, callbacks)
         root:addChild(qtyLabel)
     end
 
-    -- BUY button (3 lines high), row 9
+    -- BUY button (1 line), row 9
     local buyRow = 9
     if h >= buyRow then
         local btnWidth = 13
         local btnX = math.floor((w - btnWidth) / 2)
         buyButton = app:createButton({
             x = btnX + 1, y = buyRow,
-            width = btnWidth, height = 3,
+            width = btnWidth, height = 1,
             label = " " .. (MSG.buy_btn or "[ BUY ]"),
             bg = colors.blue,
             fg = colors.white,
