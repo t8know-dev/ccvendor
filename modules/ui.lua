@@ -115,10 +115,10 @@ function M.createUI(monitor, callbacks)
         })
         root:addChild(itemNameLabel)
 
-        -- Row 4: price label
-        if h >= 4 then
+        -- Row 8: price label (above BUY button)
+        if h >= 8 then
             priceLabel = app:createLabel({
-                x = 1, y = 4,
+                x = 1, y = 8,
                 width = w, height = 1,
                 text = "",
                 align = "center",
