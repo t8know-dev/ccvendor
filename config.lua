@@ -25,6 +25,7 @@ DEFAULT_QUANTITY = 1               -- Default selected quantity
 QUANTITY_STEP    = 1               -- Step for +/- buttons
 MIN_QUANTITY     = 1               -- Minimum selectable quantity
 MAX_QUANTITY     = 64              -- Maximum selectable quantity
+SHOW_PRICE_LABEL = true            -- Show price calculation on main screen
 
 -- Timing (seconds)
 PERIPHERAL_SCAN_INTERVAL = 1       -- Peripheral scan interval at startup
@@ -35,15 +36,16 @@ TRANSFER_TICK_INTERVAL  = 0.1    -- Interval between transfer loop iterations
 SPLASH_DELAY            = 3       -- Seconds to show splash screen
 
 -- Version
-APP_VERSION = "v0.5"
+APP_VERSION = "v0.6"
 
 -- UI Messages — monitor scale 0.5. Keep lines SHORT.
 MSG = {
-    header          = "CC VENDOR",
+    header          = "Auto Vendor",
     splash_line1    = "CC VENDOR",
     splash_line2    = "Vending Machine",
     splash_line3    = APP_VERSION,
     main_item_label = "Item: %s",
+    main_price_label = "%d spur(s)",
     main_qty_label  = "%d",
     out_of_stock    = "Out of stock!",
     buy_btn         = "[ BUY ]",

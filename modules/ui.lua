@@ -20,6 +20,7 @@ local root
 local headerLabel
 local splashLabel1, splashLabel2, splashLabel3
 local itemNameLabel
+local priceLabel
 local outOfStockLabel
 local leftArrow
 local qtyLabel
@@ -46,6 +47,7 @@ local function hideAllDynamic()
     if splashLabel2 then splashLabel2.visible = false end
     if splashLabel3 then splashLabel3.visible = false end
     if itemNameLabel then itemNameLabel.visible = false end
+    if priceLabel then priceLabel.visible = false end
     if outOfStockLabel then outOfStockLabel.visible = false end
     if leftArrow then leftArrow.visible = false end
     if qtyLabel then qtyLabel.visible = false end
@@ -112,6 +114,20 @@ function M.createUI(monitor, callbacks)
             visible = false,
         })
         root:addChild(itemNameLabel)
+
+        -- Row 4: price label
+        if h >= 4 then
+            priceLabel = app:createLabel({
+                x = 1, y = 4,
+                width = w, height = 1,
+                text = "",
+                align = "center",
+                bg = colors.black,
+                fg = colors.orange,
+                visible = false,
+            })
+            root:addChild(priceLabel)
+        end
 
         -- Message lines (reused across screens)
         msgLine1 = app:createLabel({
@@ -391,6 +407,11 @@ function M.updateScreen(st)
             if itemNameLabel then
                 itemNameLabel:setText(string.format(MSG.main_item_label or "Item: %s", ITEM_LABEL))
                 itemNameLabel.visible = true
+            end
+            if SHOW_PRICE_LABEL and priceLabel then
+                local price = (st.targetQty or DEFAULT_QUANTITY) * ITEM_PRICE
+                priceLabel:setText(string.format(MSG.main_price_label or "%d spur(s)", price))
+                priceLabel.visible = true
             end
             if leftArrow then leftArrow.visible = true end
             if qtyLabel then
