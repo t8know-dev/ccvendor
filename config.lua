@@ -35,7 +35,7 @@ TRANSFER_TICK_INTERVAL  = 0.1    -- Interval between transfer loop iterations
 SPLASH_DELAY            = 3       -- Seconds to show splash screen
 
 -- Version
-APP_VERSION = "v0.3"
+APP_VERSION = "v0.4"
 
 -- UI Messages — monitor scale 0.5. Keep lines SHORT.
 MSG = {

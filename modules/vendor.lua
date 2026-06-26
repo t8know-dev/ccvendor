@@ -91,6 +91,15 @@ function M._handlePaymentState()
 
     if not paymentSetupDone then
         -- FIRST ENTRY into payment screen — set up the depositor
+
+        -- Guard: if cancelPayment() ran between our screen check and here, bail out.
+        -- cancelPayment() sets screen to "main" first, so any non-"payment" screen
+        -- means we were cancelled mid-switch.
+        if st.getState("screen") ~= "payment" then
+            dlog("_handlePaymentState: payment cancelled before setup started")
+            return
+        end
+
         local qty = state.targetQty
         local price = qty * ITEM_PRICE
 
@@ -123,11 +132,29 @@ function M._handlePaymentState()
         -- Record the total price in state for UI display
         st.updateState({ totalPrice = price })
 
+        -- Guard: re-check screen before unlocking — cancelPayment() may have run
+        -- during the stock check or setTotalPrice above (both can yield).
+        if st.getState("screen") ~= "payment" then
+            dlog("_handlePaymentState: payment cancelled after setup, skipping unlock")
+            -- Depositor is configured but locked; screen is already "main".
+            -- Clear price on depositor to avoid stale price data.
+            pcall(periphs.setTotalPrice, 0)
+            return
+        end
+
         -- Unlock depositor to accept payment
         periphs.unlockDepositor()
 
         -- Wait for relay lines to stabilize after toggling output
         os.sleep(0.5)
+
+        -- Guard: re-check screen again after the sleep yield.
+        if st.getState("screen") ~= "payment" then
+            dlog("_handlePaymentState: payment cancelled during stabilisation, re-locking")
+            periphs.lockDepositor()
+            pcall(periphs.setTotalPrice, 0)
+            return
+        end
 
         -- Record baseline relay inputs (used by payment monitor for change detection)
         local baseline = periphs.getAllRelayInputs()
@@ -221,11 +248,17 @@ end
 -- Cancel an in-progress payment — lock depositor, reset state, return to main.
 function M.cancelPayment()
     dlog("cancelPayment: cancelling current transaction")
+    -- CRITICAL: Set screen to "main" FIRST, before any yield.
+    -- The vendor loop checks screen at the start of each iteration. If we don't
+    -- change it now, the vendor loop could re-enter payment setup after we clear
+    -- paymentSetupDone below and undo the lock.
+    st.updateState({ screen = "main" })
+    -- Now lock depositor and clean up (these may yield, but vendor loop sees "main")
     pcall(periphs.lockDepositor)
     paymentSetupDone = false
     st.resetTransaction()
     local hasStock = periphs.checkStock(ITEM, DEFAULT_QUANTITY)
-    st.updateState({ screen = "main", hasStock = hasStock })
+    st.updateState({ hasStock = hasStock })
 end
 
 return M
