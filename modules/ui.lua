@@ -275,7 +275,7 @@ function M.createUI(monitor, callbacks)
     -- BUY button (3 lines high), row 8
     local buyRow = 8
     if h >= buyRow then
-        local btnWidth = 12
+        local btnWidth = 13
         local btnX = math.floor((w - btnWidth) / 2)
         buyButton = app:createButton({
             x = btnX + 1, y = buyRow,
@@ -292,11 +292,11 @@ function M.createUI(monitor, callbacks)
     -- CANCEL button (3 lines high), row 9
     local cancelRow = 9
     if h >= cancelRow then
-        local btnWidth = 12
+        local btnWidth = 13
         local btnX = math.floor((w - btnWidth) / 2)
         cancelButton = app:createButton({
             x = btnX + 1, y = cancelRow,
-            width = btnWidth, height = 3,
+            width = btnWidth, height = 1,
             label = MSG.cancel_btn or "CANCEL",
             bg = colors.orange,
             fg = colors.white,

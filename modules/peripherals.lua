@@ -103,8 +103,8 @@ end
 -- ============================================================================
 
 local function probeMethods(name, label)
-    dlog("probeMethods(" .. label .. "): peripheral.call(" .. tostring(name) .. ", \"getMethods\")")
-    local ok, methods = pcall(function() return peripheral.call(name, "getMethods") end)
+    dlog("probeMethods(" .. label .. "): peripheral.getMethods(" .. tostring(name) .. ")")
+    local ok, methods = pcall(function() return peripheral.getMethods(name) end)
     if ok and type(methods) == "table" then
         local strs = {}
         for _, m in ipairs(methods) do strs[#strs + 1] = tostring(m) end
@@ -144,10 +144,18 @@ function M.init()
     destBbl = M.waitForPeripheral(DEST_BARREL, "Dest: " .. DEST_BARREL)
 
     -- Set relay output HIGH on startup to lock the depositor
-    pcall(function() relay:setOutput(RELAY_LOCK_SIDE, 15) end)
-    dlog("init: relay set to HIGH (locked) on side " .. tostring(RELAY_LOCK_SIDE))
+    do
+        local ok, err = pcall(function() relay:setOutput(RELAY_LOCK_SIDE, true) end)
+        if ok then
+            dlog("init: relay setOutput HIGH on " .. tostring(RELAY_LOCK_SIDE) .. " = true")
+        else
+            dlog("init: relay setOutput FAILED on " .. tostring(RELAY_LOCK_SIDE) .. ": " .. tostring(err))
+        end
+    end
+    dlog("init: relay.getInput(" .. tostring(RELAY_LOCK_SIDE) .. ")=" .. tostring(relay.getInput(RELAY_LOCK_SIDE)))
 
-    -- Probe depositor methods to verify API
+    -- Probe relay + depositor methods to verify API
+    probeMethods(RELAY, "relay")
     probeMethods(DEPOSITOR, "depositor")
 
     dlog("init: all peripherals found successfully")
@@ -330,8 +338,12 @@ end
 function M.lockDepositor()
     local rl = getRelay()
     if rl then
-        pcall(function() rl.setOutput(RELAY_LOCK_SIDE, 15) end)
-        dlog("lockDepositor: relay set to HIGH on " .. tostring(RELAY_LOCK_SIDE))
+        local ok, err = pcall(function() rl.setOutput(RELAY_LOCK_SIDE, true) end)
+        if ok then
+            dlog("lockDepositor: relay setOutput HIGH on " .. tostring(RELAY_LOCK_SIDE) .. " = true")
+        else
+            dlog("lockDepositor: relay setOutput FAILED on " .. tostring(RELAY_LOCK_SIDE) .. ": " .. tostring(err))
+        end
     else
         dlog("lockDepositor: relay nil")
     end
@@ -341,8 +353,12 @@ end
 function M.unlockDepositor()
     local rl = getRelay()
     if rl then
-        pcall(function() rl.setOutput(RELAY_LOCK_SIDE, 0) end)
-        dlog("unlockDepositor: relay set to LOW on " .. tostring(RELAY_LOCK_SIDE))
+        local ok, err = pcall(function() rl.setOutput(RELAY_LOCK_SIDE, false) end)
+        if ok then
+            dlog("unlockDepositor: relay setOutput LOW on " .. tostring(RELAY_LOCK_SIDE) .. " = false")
+        else
+            dlog("unlockDepositor: relay setOutput FAILED on " .. tostring(RELAY_LOCK_SIDE) .. ": " .. tostring(err))
+        end
     else
         dlog("unlockDepositor: relay nil")
     end
@@ -362,7 +378,8 @@ function M.getAllRelayInputs()
         local ok, val = pcall(function() return rl.getInput(side) end)
         if ok then
             inputs[side] = val
-        else
+        elseif DEBUG then
+            dlog("getAllRelayInputs: getInput(" .. side .. ") error: " .. tostring(val))
             inputs[side] = nil
         end
     end
